@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_menu_home"
+            android:title="@string/home" />
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/ic_menu_home"
+            android:title="@string/profile" />
+        <item
+            android:id="@+id/nav_addMed"
+            android:icon="@drawable/ic_add"
+            android:title="Add Medication" />
+        <item
+            android:id="@+id/nav_monthlyMed"
+            android:icon="@drawable/ic_notifications_off_grey600_24dp"
+            android:title="Monthly Intake" />
+        <item
+            android:id="@+id/nav_searchMed"
+            android:icon="@drawable/ic_menu_home"
+            android:title="Search Med" />
+        <item
+            android:id="@+id/nav_logout"
+            android:title="@string/logOut"/>
+
+    </group>
+
+</menu>

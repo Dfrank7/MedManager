@@ -1,0 +1,30 @@
+<resources>
+    <!--<string name="app_name">Med_Manager2</string>-->
+    <string name="app_name">Med-Manager</string>
+    <string name="pDialog_message">Authenticating with firebase</string>
+    <string name="logOut">Log Out</string>
+    <string name="help">Help</string>
+    <string name="about">About</string>
+    <string name="home">Home</string>
+    <string name="profile">Profile</string>
+
+    <string name="add_reminder">Reminder</string>
+    <string name="description">Description</string>
+    <string name="details">Details</string>
+    <string name="startdate">Start Date</string>
+    <string name="enddate">End Date</string>
+    <string name="time">Time</string>
+    <string name="repeat">Repeat</string>
+    <string name="repeat_off">Off</string>
+    <string name="repeat_no">Repetition Interval </string>
+    <string name="repeat_type">Type of Repetitions</string>
+    <string name="insertSuccess">Medication Insertion Successful</string>
+    <string name="insertFailure">Medication Insertion Failed</string>
+    <string name="updateSuccess">Medication Updated Successfully</string>
+    <string name="updateFailure">Failed to update medication</string>
+    <string name="deleteSuccess">Deletion Successful</string>
+    <string name="deleteFailure">Deletion failed</string>
+
+    <string name="reminder_title">Medication Reminder</string>
+
+</resources>
