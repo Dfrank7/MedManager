@@ -147,20 +147,8 @@ LoaderManager.LoaderCallbacks<Cursor>{
 //            repeat.setText("Every " + mRepeatNo + " " + mRepeatType + "(s)");
         }else {
 
-//            String mmtitle = intent.getExtras().getString("title");
-//            String mmdesc = intent.getExtras().getString("description");
-//            String mmstart = intent.getExtras().getString("startDate");
-//            String mmEnd = intent.getExtras().getString("endDate");
-//            String mmIntervalNo = intent.getExtras().getString("intervalNo");
-//            String mmIntervalType = intent.getExtras().getString("intervalType");
+
             getSupportActionBar().setTitle("Edit Medication");
-//            title.setText(mmtitle);
-//            description.setText(mmdesc);
-//            startDate.setText(mmstart);
-//            endDate.setText(mmEnd);
-//            repeatNo.setText(mmIntervalType);
-//            repeatType.setText(mmIntervalNo);
-//            repeat.setText("Every " + mmIntervalType + " " + mmIntervalNo + "(s)");
             getLoaderManager().restartLoader(0,null,this);
 
         }
