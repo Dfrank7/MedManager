@@ -35,7 +35,6 @@
             android:gravity="top|left"
             android:textColor="@android:color/white"
             android:scrollHorizontally="false"
-            android:textColorHint="@color/primary_text_disabled_material_dark"
             android:inputType="textCapWords|textMultiLine"
             android:layout_marginRight="16dp"
             android:layout_height="50dp"/>
@@ -51,7 +50,6 @@
             android:gravity="top|left"
             android:textColor="@android:color/white"
             android:scrollHorizontally="false"
-            android:textColorHint="@color/primary_text_disabled_material_dark"
             android:inputType="textCapWords|textMultiLine"
             android:layout_marginRight="16dp"
             android:layout_height="50dp"/>

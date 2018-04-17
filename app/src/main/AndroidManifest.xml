@@ -20,20 +20,20 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
     </activity>
+        <activity android:name=".activities.SearchActivity"
+            android:parentActivityName=".activities.MainActivity"
+            />
 
     <activity android:name=".activities.MainActivity">
-        <!--<intent-filter>-->
-        <!--<action android:name="android.intent.action.MAIN" />-->
-
-        <!--<category android:name="android.intent.category.LAUNCHER" />-->
-        <!--</intent-filter>-->
+        <meta-data android:name="android.app.searchable"
+            android:resource="@xml/searchable" />
     </activity>
     <activity android:name=".Profile">
 
     </activity>
-        <activity android:name=".activities.AddMedication">
-
-        </activity>
+        <activity android:name=".activities.AddMedication"
+            android:parentActivityName=".activities.MainActivity"
+            />
 
         <provider
             android:authorities="com.example.dfrank.med_manager2"

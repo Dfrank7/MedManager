@@ -11,10 +11,13 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -53,6 +56,7 @@ LoaderManager.LoaderCallbacks<Cursor>{
     private static final long milMonth = 2592000000L;
 
     private Calendar mCalendar;
+    private int errorColor;
     private int mYear, mMonth, mHour, mMinute, mDay;
     private long mRepeatTime;
     private Switch mRepeatSwitch;
@@ -65,6 +69,9 @@ LoaderManager.LoaderCallbacks<Cursor>{
     private String mRepeatNo;
     private String mRepeatType;
     private String mActive;
+    private String errorString;
+    private ForegroundColorSpan foregroundColorSpan;
+    private SpannableStringBuilder spannableStringBuilder;
 
 
     private Uri mCurrentReminderUri;
@@ -97,12 +104,17 @@ LoaderManager.LoaderCallbacks<Cursor>{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addmedication);
         ButterKnife.bind(this);
-        medCursorAdapter = new MedCursorAdapter(getApplicationContext());
+        errorString = getString(R.string.errorString);
+        errorColor = ContextCompat.getColor(getApplicationContext(), R.color.colorAccent);
+        foregroundColorSpan = new ForegroundColorSpan(errorColor);
+        spannableStringBuilder = new SpannableStringBuilder(errorString);
+        spannableStringBuilder.setSpan(foregroundColorSpan, 0, errorString.length(), 0);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Add Medication");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+        //getting uri from intent
         Intent intent = getIntent();
         mCurrentReminderUri = intent.getData();
 
@@ -181,6 +193,8 @@ LoaderManager.LoaderCallbacks<Cursor>{
     }
 
     public void setStartDate(View v){
+
+        //Setting up start date
         Calendar now = Calendar.getInstance();
         DatePickerDialog datePickerDialog =
                 DatePickerDialog.newInstance(new DatePickerDialog.OnDateSetListener() {
@@ -202,6 +216,8 @@ LoaderManager.LoaderCallbacks<Cursor>{
     }
 
     public void setEndDate(View v){
+
+        //Setting up End date
         Calendar now = Calendar.getInstance();
         DatePickerDialog datePickerDialog =
                 DatePickerDialog.newInstance(new DatePickerDialog.OnDateSetListener() {
@@ -224,6 +240,8 @@ LoaderManager.LoaderCallbacks<Cursor>{
 
     public void setTime(View v){
 
+
+        //Setting Start time;
         Calendar now = Calendar.getInstance();
         TimePickerDialog tpd = TimePickerDialog.newInstance(new TimePickerDialog.OnTimeSetListener() {
             @Override
@@ -349,9 +367,10 @@ LoaderManager.LoaderCallbacks<Cursor>{
             mRepeatTime = Integer.parseInt(mRepeatNo) * milMonth;
         }
 
+
         if (mTitle.isEmpty() || mDescription.isEmpty()) {
-            title.setError("Please fill the editText");
-            description.setError("Please fill the editText");
+            title.setError(spannableStringBuilder);
+            description.setError(spannableStringBuilder);
         } else {
             ContentValues contentValues = new ContentValues();
             contentValues.put(MedManagerContract.MedManagerEntry.COLUMN_TITLE, mTitle);
@@ -389,7 +408,6 @@ LoaderManager.LoaderCallbacks<Cursor>{
 
         // Set up calender for creating the notification
 
-        long selectedTimestamp =  mCalendar.getTimeInMillis();
 
     }
 
@@ -399,8 +417,8 @@ LoaderManager.LoaderCallbacks<Cursor>{
         mDescription = description.getText().toString().trim();
 
         if (mTitle.isEmpty() || mDescription.isEmpty()) {
-            title.setError("Please fill the editText");
-            description.setError("Please fill the editText");
+            title.setError(spannableStringBuilder);
+            description.setError(spannableStringBuilder);
         } else {
             ContentValues contentValues = new ContentValues();
             contentValues.put(MedManagerContract.MedManagerEntry.COLUMN_TITLE, mTitle);
@@ -413,7 +431,7 @@ LoaderManager.LoaderCallbacks<Cursor>{
             contentValues.put(MedManagerContract.MedManagerEntry.COLUMN_INTERVAL_TYPE, mRepeatType);
             contentValues.put(MedManagerContract.MedManagerEntry.COLUMN_ACTIVE, mActive);
 
-//
+
 
             int newId = getContentResolver().update(mCurrentReminderUri,
                     contentValues, null, null);
@@ -457,6 +475,7 @@ LoaderManager.LoaderCallbacks<Cursor>{
         return true;
     }
 
+    //Toast Method
     private void toast(String message){
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }

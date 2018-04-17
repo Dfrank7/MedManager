@@ -2,7 +2,10 @@ package com.example.dfrank.med_manager2.activities;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.dfrank.med_manager2.R;
 import com.example.dfrank.med_manager2.activities.MainActivity;
@@ -57,7 +61,11 @@ public class SignInActivity extends AppCompatActivity {
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                signIn();
+                if (!isConnectionAvailable(getApplicationContext())){
+                    toast("Please switch on your internet connection");
+                }else {
+                    signIn();
+                }
             }
         });
 
@@ -152,6 +160,16 @@ public class SignInActivity extends AppCompatActivity {
         if (progressDialog!=null && progressDialog.isShowing()){
             progressDialog.dismiss();
         }
+    }
+
+    public static boolean isConnectionAvailable(Context context) {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+    }
+    private void toast(String message){
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }
 

@@ -2,8 +2,10 @@ package com.example.dfrank.med_manager2.activities;
 
 import android.annotation.SuppressLint;
 import android.app.LoaderManager;
+import android.app.SearchManager;
 import android.content.AsyncTaskLoader;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -13,6 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -27,15 +30,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.dfrank.med_manager2.Adapter.MedAdapter;
 import com.example.dfrank.med_manager2.Adapter.MedCursorAdapter;
+import com.example.dfrank.med_manager2.Medication;
 import com.example.dfrank.med_manager2.Profile;
 import com.example.dfrank.med_manager2.R;
 import com.example.dfrank.med_manager2.User;
 import com.example.dfrank.med_manager2.data.MedManagerContract;
+import com.example.dfrank.med_manager2.data.MedManagerHelper;
 import com.example.dfrank.med_manager2.data.MedManagerProvider;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -46,17 +52,23 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>
+         {
 
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
     private FirebaseAuth.AuthStateListener mAustatelistener;
     private GoogleSignInClient mGoogleSignIn;
     private MedCursorAdapter medCursorAdapter;
+    private List<Medication> medicationList;
+    private MedManagerHelper managerHelper;
     @BindView(R.id.drawer_layout) DrawerLayout drawerLayout;
     @BindView(R.id.nav_view) NavigationView navigationView;
     @BindView(R.id.fab) FloatingActionButton fab;
@@ -65,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 //    @BindView(R.id.listView)
 //    ListView listView;
     MedAdapter medAdapter;
+    private MedManagerHelper managerProvider;
 
     private static final int MED_LOADER_ID = 0;
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -75,11 +88,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        managerProvider = new MedManagerHelper(getApplicationContext());
         medAdapter = new MedAdapter(getApplicationContext(),null,false);
+        managerHelper = new MedManagerHelper(this);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //start new Activity
                 Intent intent = new Intent(MainActivity.this, AddMedication.class);
                 startActivity(intent);
             }
@@ -116,7 +132,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         Toast.makeText(getBaseContext(), "Not yet Implemented",Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.nav_searchMed:
-                        Toast.makeText(getBaseContext(), "Not yet Implemented",Toast.LENGTH_SHORT).show();
+                        Intent intent1 = new Intent(getApplicationContext(),SearchActivity.class);
+                        startActivity(intent1);
                         break;
                 }
 
@@ -126,6 +143,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         });
 
+
+        medicationList = new ArrayList<>();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         medCursorAdapter = new MedCursorAdapter(this);
         recyclerView.setAdapter(medCursorAdapter);
@@ -144,6 +163,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         getLoaderManager().initLoader(MED_LOADER_ID, null, this);
 
+
+        //Implementing swipe for delete
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT|ItemTouchHelper.LEFT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
@@ -152,10 +173,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                //getting the row Id
                 int id = (int) viewHolder.itemView.getTag();
                 String stringId = Integer.toString(id);
                 Uri uri =MedManagerContract.MedManagerEntry.CONTENT_URI;
                 uri = uri.buildUpon().appendPath(stringId).build();
+                //deleting medication
                 getContentResolver().delete(uri, null, null);
                 getLoaderManager().restartLoader(MED_LOADER_ID, null, MainActivity.this);
             }
@@ -169,7 +192,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -178,6 +200,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
+    //Restarting loader to update view
     @Override
     protected void onResume() {
         super.onResume();
@@ -257,26 +280,18 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 break;
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
+                break;
+            case R.id.search:
+                Intent intent = new Intent(MainActivity.this,SearchActivity.class);
+                startActivity(intent);
         }
+
         return true;
 
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-
-        String[] projection = {
-                MedManagerContract.MedManagerEntry._ID,
-                MedManagerContract.MedManagerEntry.COLUMN_TITLE,
-                MedManagerContract.MedManagerEntry.COLUMN_DESCRIPTION,
-                MedManagerContract.MedManagerEntry.COLUMN_START_DATE,
-                MedManagerContract.MedManagerEntry.COLUMN_END_DATE,
-                MedManagerContract.MedManagerEntry.COLUMN_INTERVAL,
-                MedManagerContract.MedManagerEntry.COLUMN_INTERVAL_NO,
-                MedManagerContract.MedManagerEntry.COLUMN_INTERVAL_TYPE,
-                MedManagerContract.MedManagerEntry.COLUMN_ACTIVE
-        };
-
         // This loader will execute the ContentProvider's query method on a background thread
 //        return new CursorLoader(this,   // Parent activity context
 //                MedManagerContract.MedManagerEntry.CONTENT_URI,         // Query the content URI for the current reminder
@@ -320,10 +335,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 super.deliverResult(data);
             }
         };
+
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        //Change the cursor
         medCursorAdapter.swapCursor(cursor);
         //medAdapter.swapCursor(cursor);
     }
@@ -333,4 +350,5 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
        medCursorAdapter.swapCursor(null);
        // medAdapter.swapCursor(null);
     }
+
 }

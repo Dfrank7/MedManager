@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="86dp"
+    android:layout_gravity="center"
+    android:layout_margin="5dp"
+    android:elevation="3dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:background="?android:attr/selectableItemBackground"
     android:layout_height="86dp"
     xmlns:tools="http://schemas.android.com/tools">
@@ -55,12 +65,13 @@
 
     </LinearLayout>
 
-    <ImageView android:layout_width="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_centerVertical="true"
-        android:id="@+id/active_image"/>
+        <ImageView android:layout_width="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_centerVertical="true"
+            android:id="@+id/active_image"/>
 
 </RelativeLayout>
+</android.support.v7.widget.CardView>

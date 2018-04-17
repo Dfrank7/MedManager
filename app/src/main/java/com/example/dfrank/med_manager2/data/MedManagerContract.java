@@ -58,4 +58,6 @@ public class MedManagerContract {
     public static String getColumnString(Cursor cursor, String columnName) {
         return cursor.getString(cursor.getColumnIndex(columnName));
     }
+
+
 }

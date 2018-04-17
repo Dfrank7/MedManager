@@ -21,6 +21,7 @@ import com.example.dfrank.med_manager2.activities.AddMedication;
 import com.example.dfrank.med_manager2.data.MedManagerContract;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,7 +34,7 @@ public class MedCursorAdapter extends RecyclerView.Adapter<MedCursorAdapter.view
 
     TextDrawable textDrawable;
     private int idIndex;
-    ArrayList<Medication> medications = new ArrayList<>();
+    List<Medication> medications = new ArrayList<>();
     int id;
     private ColorGenerator mColorGenerator = ColorGenerator.DEFAULT;
 
@@ -56,6 +57,7 @@ public class MedCursorAdapter extends RecyclerView.Adapter<MedCursorAdapter.view
         idIndex = cursor.getColumnIndex(MedManagerContract.MedManagerEntry._ID);
         int titleIndex = cursor.getColumnIndex(MedManagerContract.MedManagerEntry.COLUMN_TITLE);
         int descriptionIndex = cursor.getColumnIndex(MedManagerContract.MedManagerEntry.COLUMN_DESCRIPTION);
+        int timeIndex = cursor.getColumnIndex(MedManagerContract.MedManagerEntry.COLUMN_TIME);
         int intervalIndex = cursor.getColumnIndex(MedManagerContract.MedManagerEntry.COLUMN_INTERVAL);
         int intervalNoIndex = cursor.getColumnIndex(MedManagerContract.MedManagerEntry.COLUMN_INTERVAL_NO);
         int startDateIndex =cursor.getColumnIndex(MedManagerContract.MedManagerEntry.COLUMN_START_DATE);
@@ -67,14 +69,17 @@ public class MedCursorAdapter extends RecyclerView.Adapter<MedCursorAdapter.view
         id = cursor.getInt(idIndex);
         String title = cursor.getString(titleIndex);
         String description = cursor.getString(descriptionIndex);
+        String time = cursor.getString(timeIndex);
         String startDate = cursor.getString(startDateIndex);
         String endDate = cursor.getString(endDateIndex);
         String interval = cursor.getString(intervalIndex);
         String intervalNo = cursor.getString(intervalNoIndex);
         String intervalType = cursor.getString(intervalTypeIndex);
 
-        medications.add(new Medication(title, description,startDate,endDate,interval,intervalNo,
-                intervalType));
+//        medications.add(new Medication(title, description,time,startDate,endDate,interval,intervalNo,
+//                intervalType));
+
+
 
         String date = startDate+ " - "+ endDate;
 
@@ -97,6 +102,11 @@ public class MedCursorAdapter extends RecyclerView.Adapter<MedCursorAdapter.view
             return 0;
         }
         return cursor.getCount();
+    }
+
+    public void setFilter(List<Medication> newList){
+        medications.addAll(newList);
+        notifyDataSetChanged();
     }
 
     public Cursor swapCursor(Cursor mcursor){

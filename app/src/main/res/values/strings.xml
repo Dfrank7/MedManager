@@ -27,4 +27,9 @@
 
     <string name="reminder_title">Medication Reminder</string>
 
+    <string name="empty_view_title_text">Ooopss!!!! No Medication yet, You can tap on
+    the + button to add medication</string>
+    <string name="empty_view_subtitle_text">You can also Swipe to delete</string>
+    <string name="errorString">his field cannot be empty</string>
+
 </resources>

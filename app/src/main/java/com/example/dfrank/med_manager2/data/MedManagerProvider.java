@@ -7,9 +7,15 @@ import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
+import com.example.dfrank.med_manager2.Medication;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by dfrank on 3/22/18.
@@ -18,6 +24,9 @@ import android.support.annotation.Nullable;
 public class MedManagerProvider extends ContentProvider {
     MedManagerHelper medManagerHelper;
     Context context;
+    public MedManagerProvider(){
+
+    }
     private static final int MED_MANAGER = 100;
     private static final int MED_MANAGER_ID = 101;
     private static final String Content = "content://";
@@ -157,4 +166,28 @@ public class MedManagerProvider extends ContentProvider {
 
         return rowsUpdated;
     }
+    public Cursor getWordMatches(String query, String[] columns) {
+        String selection = MedManagerContract.MedManagerEntry.COLUMN_TITLE + " MATCH ?";
+        String[] selectionArgs = new String[] {query+"*"};
+
+        return query(selection, selectionArgs, columns);
+    }
+
+    private Cursor query(String selection, String[] selectionArgs, String[] columns) {
+        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        builder.setTables(MedManagerContract.MedManagerEntry.Table_Name);
+
+        Cursor cursor = builder.query(medManagerHelper.getReadableDatabase(),
+                columns, selection, selectionArgs, null, null, null);
+
+        if (cursor == null) {
+            return null;
+        } else if (!cursor.moveToFirst()) {
+            cursor.close();
+            return null;
+        }
+        return cursor;
+    }
+
+
 }
