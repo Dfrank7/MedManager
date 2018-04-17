@@ -28,5 +28,4 @@ android:
   - extra
 
 
-script:
-- ./gradlew clean test build
+
