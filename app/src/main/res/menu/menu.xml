@@ -3,6 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:title="Refresh"
+        android:id="@+id/refresh"/>
+    <item
         android:title="@string/logOut"
         android:id="@+id/logOut"/>
     <item

@@ -148,14 +148,7 @@ public class MedManagerProvider extends ContentProvider {
 
     private int updateMedication(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 
-//        if (values.size() == 0) {
-//            return 0;
-//        }
-
         SQLiteDatabase database = medManagerHelper.getWritableDatabase();
-//        int id = database.update(MedManagerContract.MedManagerEntry.Table_Name,values,selection,selectionArgs);
-//        getContext().getContentResolver().notifyChange(uri,null);
-//        return id;
 
         int rowsUpdated = database.update(MedManagerContract.MedManagerEntry.Table_Name
                 , values, selection, selectionArgs);
@@ -166,28 +159,8 @@ public class MedManagerProvider extends ContentProvider {
 
         return rowsUpdated;
     }
-    public Cursor getWordMatches(String query, String[] columns) {
-        String selection = MedManagerContract.MedManagerEntry.COLUMN_TITLE + " MATCH ?";
-        String[] selectionArgs = new String[] {query+"*"};
 
-        return query(selection, selectionArgs, columns);
-    }
 
-    private Cursor query(String selection, String[] selectionArgs, String[] columns) {
-        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-        builder.setTables(MedManagerContract.MedManagerEntry.Table_Name);
-
-        Cursor cursor = builder.query(medManagerHelper.getReadableDatabase(),
-                columns, selection, selectionArgs, null, null, null);
-
-        if (cursor == null) {
-            return null;
-        } else if (!cursor.moveToFirst()) {
-            cursor.close();
-            return null;
-        }
-        return cursor;
-    }
 
 
 }

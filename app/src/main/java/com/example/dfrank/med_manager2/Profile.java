@@ -8,11 +8,13 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -44,10 +46,13 @@ public class Profile extends AppCompatActivity {
 
     @BindView(R.id.displayName)
     EditText displayName;
-    @BindView(R.id.imageView)
-    ImageView profilePhoto;
+//    @BindView(R.id.imageView)
+//    ImageView profilePhoto;
+    @BindView(R.id.toolbar)
+    android.support.v7.widget.Toolbar toolbar;
     @BindView(R.id.buttonSave)
     Button saveUser;
+    @BindView(R.id.emailName) EditText email;
     private Uri uriProfileImage;
     String profileImageUrl;
 
@@ -58,14 +63,18 @@ public class Profile extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference("User");
         ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Profile");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
         //User user = new User(getName());
         //mDatabase.child(getUid()).setValue(user);
-        profilePhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showImageChooser();
-            }
-        });
+//        profilePhoto.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                showImageChooser();
+//            }
+//        });
 
         loadUserInfo();
         saveUser.setOnClickListener(new View.OnClickListener() {
@@ -96,13 +105,16 @@ public class Profile extends AppCompatActivity {
     }
 
     private void loadUserInfo(){
-        if (getPhotoUrl()!=null){
-            Glide.with(this)
-                    .load(getPhotoUrl())
-                    .into(profilePhoto);
-        }
+//        if (getPhotoUrl()!=null){
+//            Glide.with(this)
+//                    .load(getPhotoUrl())
+//                    .into(profilePhoto);
+//        }
         if (getName()!=null){
             displayName.setText(getName());
+        }
+        if (getEmail()!=null){
+            email.setText(getEmail());
         }
 //        profileImageUrl = getPhotoUrl().toString();
 //
@@ -112,6 +124,7 @@ public class Profile extends AppCompatActivity {
 
     private void saveUserInfo(){
         String name = displayName.getText().toString().trim();
+        String emailText = email.getText().toString();
         profileImageUrl = getPhotoUrl().toString();
         if (name.isEmpty()){
             displayName.setError("Field can't be empty");
@@ -123,8 +136,17 @@ public class Profile extends AppCompatActivity {
         if (mAuth.getCurrentUser()!=null && profileImageUrl!=null){
             UserProfileChangeRequest profile = new UserProfileChangeRequest.Builder()
                     .setDisplayName(name)
-                    .setPhotoUri(Uri.parse(profileImageUrl))
                     .build();
+
+            mAuth.getCurrentUser().updateEmail(emailText)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d("TAG", "User email address updated.");
+                            }
+                        }
+                    });
 
             mAuth.getCurrentUser().updateProfile(profile)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -157,7 +179,7 @@ public class Profile extends AppCompatActivity {
             uriProfileImage = data.getData();
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uriProfileImage);
-                profilePhoto.setImageBitmap(bitmap);
+//                profilePhoto.setImageBitmap(bitmap);
 
                 uploadImageToFirebaseStorage();
 

@@ -1,9 +1,5 @@
 package com.example.dfrank.med_manager2.activities;
 
-import android.app.SearchManager;
-import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
@@ -15,15 +11,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
 import android.widget.SearchView;
 
-import com.example.dfrank.med_manager2.Adapter.MedAdapter;
 import com.example.dfrank.med_manager2.Adapter.SearchAdapter;
 import com.example.dfrank.med_manager2.Medication;
 import com.example.dfrank.med_manager2.R;
 import com.example.dfrank.med_manager2.data.MedManagerHelper;
-import com.example.dfrank.med_manager2.data.MedManagerProvider;
 
 import java.util.ArrayList;
 import java.util.List;

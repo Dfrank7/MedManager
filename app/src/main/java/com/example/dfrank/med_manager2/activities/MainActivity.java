@@ -3,11 +3,7 @@ package com.example.dfrank.med_manager2.activities;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.LoaderManager;
-import android.app.SearchManager;
 import android.content.AsyncTaskLoader;
-import android.content.ContentUris;
-import android.content.Context;
-import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
@@ -17,7 +13,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -30,13 +25,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.SearchView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.dfrank.med_manager2.Adapter.MedAdapter;
 import com.example.dfrank.med_manager2.Adapter.MedCursorAdapter;
 import com.example.dfrank.med_manager2.Medication;
 import com.example.dfrank.med_manager2.Profile;
@@ -44,7 +34,6 @@ import com.example.dfrank.med_manager2.R;
 import com.example.dfrank.med_manager2.User;
 import com.example.dfrank.med_manager2.data.MedManagerContract;
 import com.example.dfrank.med_manager2.data.MedManagerHelper;
-import com.example.dfrank.med_manager2.data.MedManagerProvider;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -77,10 +66,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @BindView(R.id.fab) FloatingActionButton fab;
     @BindView(R.id.recyclerViewMed)
     RecyclerView recyclerView;
-//    @BindView(R.id.listView)
-//    ListView listView;
-    MedAdapter medAdapter;
-    private MedManagerHelper managerProvider;
 
     private static final int MED_LOADER_ID = 0;
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -91,8 +76,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        managerProvider = new MedManagerHelper(getApplicationContext());
-        medAdapter = new MedAdapter(getApplicationContext(),null,false);
         managerHelper = new MedManagerHelper(this);
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -308,6 +291,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             case R.id.search:
                 Intent intent = new Intent(MainActivity.this,SearchActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.refresh:
+                getLoaderManager().restartLoader(MED_LOADER_ID, null, this);
         }
 
         return true;

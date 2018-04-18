@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -87,8 +88,6 @@ LoaderManager.LoaderCallbacks<Cursor>{
     @BindView(R.id.set_repeat_type) TextView repeatType;
     @BindView(R.id.set_time) TextView mTimeText;
     private boolean mVehicleHasChanged = false;
-    RecyclerView.ViewHolder viewHolder;
-    private MedCursorAdapter medCursorAdapter;
 
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
@@ -120,7 +119,7 @@ LoaderManager.LoaderCallbacks<Cursor>{
 
         if (mCurrentReminderUri==null){
             getSupportActionBar().setTitle("Add Medication");
-
+            invalidateOptionsMenu();
 
         }else {
 
@@ -416,10 +415,63 @@ LoaderManager.LoaderCallbacks<Cursor>{
 
         }
     }
+    private void deleteMedication(){
+        mActive = "false";
+        //deleting medication
+        new AlarmScheduler().cancelAlarm(getApplicationContext(), mCurrentReminderUri);
+        int rowsDeleted = getContentResolver().delete(mCurrentReminderUri, null, null);
+        if (rowsDeleted == 0) {
+            // If no rows were deleted, then there was an error with the delete.
+            Toast.makeText(this, "Failed to delete",
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            // Otherwise, the delete was successful and we can display a toast.
+            Toast.makeText(this, "Delete Successful",
+                    Toast.LENGTH_SHORT).show();
+        }
+        finish();
+    }
+
+    private void showDeleteConfirmationDialog() {
+        // Create an AlertDialog.Builder and set the message, and click listeners
+        // for the postivie and negative buttons on the dialog.
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Do you really want to delete this Medication ");
+        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Delete" button, so delete the reminder.
+                deleteMedication();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Cancel" button, so dismiss the dialog
+                // and continue editing the reminder.
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_add_medication, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        // If this is a new reminder, hide the "Delete" menu item.
+        if (mCurrentReminderUri == null) {
+            MenuItem menuItem = menu.findItem(R.id.discard_reminder);
+            menuItem.setVisible(false);
+        }
         return true;
     }
 
@@ -432,6 +484,9 @@ LoaderManager.LoaderCallbacks<Cursor>{
                 }else {
                     updateMedication();
                 }
+                break;
+            case R.id.discard_reminder:
+                showDeleteConfirmationDialog();
         }
         return true;
     }
