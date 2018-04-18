@@ -117,34 +117,11 @@ LoaderManager.LoaderCallbacks<Cursor>{
         //getting uri from intent
         Intent intent = getIntent();
         mCurrentReminderUri = intent.getData();
-
-        //Toast.makeText(getApplicationContext(),mCurrentReminderUri.toString(), Toast.LENGTH_SHORT).show();
-//        Log.i("URI", mCurrentReminderUri.toString());
+        
         if (mCurrentReminderUri==null){
             getSupportActionBar().setTitle("Add Medication");
 
-            // Initialize default values
-//            mActive = "true";
-//            mRepeat = "true";
-//            mRepeatNo = Integer.toString(1);
-//            mRepeatType = "Hour";
-//
-//            mCalendar = Calendar.getInstance();
-//            mHour = mCalendar.get(Calendar.HOUR_OF_DAY);
-//            mMinute = mCalendar.get(Calendar.MINUTE);
-//            mYear = mCalendar.get(Calendar.YEAR);
-//            mMonth = mCalendar.get(Calendar.MONTH) + 1;
-//            mDay = mCalendar.get(Calendar.DATE);
-//
-//            mStartDate = mDay + "/" + mMonth + "/" + mYear;
-//            mEndDate = mDay + "/" + mMonth + "/" + mYear;
-//
-//            // Setup TextViews using reminder values
-//            startDate.setText(mStartDate);
-//            endDate.setText(mEndDate);
-//            repeatNo.setText(mRepeatNo);
-//            repeatType.setText(mRepeatType);
-//            repeat.setText("Every " + mRepeatNo + " " + mRepeatType + "(s)");
+
         }else {
 
 
@@ -371,15 +348,15 @@ LoaderManager.LoaderCallbacks<Cursor>{
             Uri newUri = getContentResolver().insert(MedManagerContract.MedManagerEntry.CONTENT_URI, contentValues);
             if (newUri != null) {
                 toast(getString(R.string.insertSuccess));
-                // Set up calender for creating the notification
 
 
-//                    Toast.makeText(this, "Alarm time is " + selectedTimestamp,
-//                            Toast.LENGTH_LONG).show();
+
+
                 finish();
             } else {
                 toast(getString(R.string.insertFailure));
             }
+            // Set up calender for creating the notification
             long selectedTimestamp =  mCalendar.getTimeInMillis();
             if (mActive.equals("true")) {
                 if (mRepeat.equals("true")) {
@@ -392,7 +369,6 @@ LoaderManager.LoaderCallbacks<Cursor>{
 
             }
 
-        // Set up calender for creating the notification
 
 
     }
