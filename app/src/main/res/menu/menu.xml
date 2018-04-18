@@ -5,6 +5,10 @@
     <item
         android:title="@string/logOut"
         android:id="@+id/logOut"/>
+    <item
+        android:title="@string/profile"
+        android:id="@+id/profile"
+        />
     <item android:id="@+id/search"
         android:title="Search"
         android:icon="@drawable/ic_search"

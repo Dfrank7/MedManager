@@ -1,12 +1,14 @@
 package com.example.dfrank.med_manager2.activities;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.app.SearchManager;
 import android.content.AsyncTaskLoader;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
@@ -123,19 +125,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.nav_logout:
-                        signOut();
+                        alertDialog();
                         break;
                     case R.id.nav_addMed:
                         Intent intent = new Intent(getApplicationContext(), AddMedication.class);
                         startActivity(intent);
                         break;
-                    case R.id.nav_monthlyMed:
-                        Toast.makeText(getBaseContext(), "Not yet Implemented",Toast.LENGTH_SHORT).show();
-                        break;
                     case R.id.nav_searchMed:
                         Intent intent1 = new Intent(getApplicationContext(),SearchActivity.class);
                         startActivity(intent1);
                         break;
+
                 }
 
                 item.setChecked(true);
@@ -143,6 +143,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 return true;
             }
         });
+
 
 
         medicationList = new ArrayList<>();
@@ -190,6 +191,26 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
 
 
+    }
+
+    private void alertDialog(){
+        final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setMessage("Do you really want to Log out");
+        alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                signOut();
+                finish();
+            }
+        });
+        alert.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        AlertDialog alertDialog = alert.create();
+        alertDialog.show();
     }
 
     @Override
@@ -277,9 +298,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.logOut:
-                signOut();
-                finish();
+                alertDialog();
                 break;
+            case R.id.profile:
+                startActivity(new Intent(this,Profile.class));
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
                 break;
@@ -344,13 +366,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         //Change the cursor
         medCursorAdapter.swapCursor(cursor);
-        //medAdapter.swapCursor(cursor);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-       medCursorAdapter.swapCursor(null);
-       // medAdapter.swapCursor(null);
+        medCursorAdapter.swapCursor(null);
     }
 
 }

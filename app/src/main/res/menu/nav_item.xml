@@ -6,20 +6,12 @@
             android:icon="@drawable/ic_menu_home"
             android:title="@string/home" />
         <item
-            android:id="@+id/nav_profile"
-            android:icon="@drawable/ic_menu_home"
-            android:title="@string/profile" />
-        <item
             android:id="@+id/nav_addMed"
             android:icon="@drawable/ic_add"
             android:title="Add Medication" />
         <item
-            android:id="@+id/nav_monthlyMed"
-            android:icon="@drawable/ic_notifications_off_grey600_24dp"
-            android:title="Monthly Intake" />
-        <item
             android:id="@+id/nav_searchMed"
-            android:icon="@drawable/ic_menu_home"
+            android:icon="@drawable/ic_search"
             android:title="Search Med" />
         <item
             android:id="@+id/nav_logout"

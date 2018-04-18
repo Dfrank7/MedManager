@@ -117,7 +117,7 @@ LoaderManager.LoaderCallbacks<Cursor>{
         //getting uri from intent
         Intent intent = getIntent();
         mCurrentReminderUri = intent.getData();
-        
+
         if (mCurrentReminderUri==null){
             getSupportActionBar().setTitle("Add Medication");
 
