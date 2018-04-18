@@ -58,6 +58,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+import reminder.AlarmScheduler;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>
          {
@@ -179,6 +180,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 Uri uri =MedManagerContract.MedManagerEntry.CONTENT_URI;
                 uri = uri.buildUpon().appendPath(stringId).build();
                 //deleting medication
+                new AlarmScheduler().cancelAlarm(getApplicationContext(), uri);
                 getContentResolver().delete(uri, null, null);
                 getLoaderManager().restartLoader(MED_LOADER_ID, null, MainActivity.this);
             }

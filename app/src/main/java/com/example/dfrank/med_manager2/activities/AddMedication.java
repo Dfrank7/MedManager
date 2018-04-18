@@ -68,7 +68,7 @@ LoaderManager.LoaderCallbacks<Cursor>{
     private String mRepeat;
     private String mRepeatNo;
     private String mRepeatType;
-    private String mActive;
+    public String mActive;
     private String errorString;
     private ForegroundColorSpan foregroundColorSpan;
     private SpannableStringBuilder spannableStringBuilder;
@@ -276,13 +276,12 @@ LoaderManager.LoaderCallbacks<Cursor>{
     }
 
     public void selectRepeatType(View v){
-        final String[] items = new String[5];
+        final String[] items = new String[4];
 
-        items[0] = "Minute";
-        items[1] = "Hour";
-        items[2] = "Day";
-        items[3] = "Week";
-        items[4] = "Month";
+        items[0] = "Hour";
+        items[1] = "Day";
+        items[2] = "Week";
+        items[3] = "Month";
 
         // Create List Dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -343,9 +342,7 @@ LoaderManager.LoaderCallbacks<Cursor>{
         mCalendar.set(Calendar.MINUTE, mMinute);
         mCalendar.set(Calendar.SECOND, 0);
 
-        if (mRepeatType.equals("Minute")) {
-            mRepeatTime = Integer.parseInt(mRepeatNo) * milMinute;
-        } else if (mRepeatType.equals("Hour")) {
+        if (mRepeatType.equals("Hour")) {
             mRepeatTime = Integer.parseInt(mRepeatNo) * milHour;
         } else if (mRepeatType.equals("Day")) {
             mRepeatTime = Integer.parseInt(mRepeatNo) * milDay;
@@ -376,23 +373,24 @@ LoaderManager.LoaderCallbacks<Cursor>{
                 toast(getString(R.string.insertSuccess));
                 // Set up calender for creating the notification
 
-                long selectedTimestamp =  mCalendar.getTimeInMillis();
-                if (mActive.equals("true")) {
-                    if (mRepeat.equals("true")) {
-                        new AlarmScheduler().setRepeatAlarm(getApplicationContext(), selectedTimestamp, newUri, mRepeatTime);
-                    } else if (mRepeat.equals("false")) {
-                        new AlarmScheduler().setAlarm(getApplicationContext(), selectedTimestamp, newUri);
-                    }
 
 //                    Toast.makeText(this, "Alarm time is " + selectedTimestamp,
 //                            Toast.LENGTH_LONG).show();
-                }
                 finish();
             } else {
                 toast(getString(R.string.insertFailure));
             }
+            long selectedTimestamp =  mCalendar.getTimeInMillis();
+            if (mActive.equals("true")) {
+                if (mRepeat.equals("true")) {
+                    new AlarmScheduler().setRepeatAlarm(getApplicationContext(), selectedTimestamp, mCurrentReminderUri, mRepeatTime);
+                } else if (mRepeat.equals("false")) {
+                    new AlarmScheduler().setAlarm(getApplicationContext(), selectedTimestamp, newUri);
+                }
+            }
 
-        }
+
+            }
 
         // Set up calender for creating the notification
 
@@ -428,19 +426,18 @@ LoaderManager.LoaderCallbacks<Cursor>{
                 toast("Failed to update");
             } else {
                 long selectedTimestamp =  mCalendar.getTimeInMillis();
-                if (mActive.equals("true")) {
-                    if (mRepeat.equals("true")) {
-                        new AlarmScheduler().setRepeatAlarm(getApplicationContext(), selectedTimestamp, mCurrentReminderUri, mRepeatTime);
-                    } else if (mRepeat.equals("false")) {
-                        new AlarmScheduler().setAlarm(getApplicationContext(), selectedTimestamp, mCurrentReminderUri);
-                    }
+                if (mRepeat.equals("true")) {
+                    new AlarmScheduler().setRepeatAlarm(getApplicationContext(), selectedTimestamp, mCurrentReminderUri, mRepeatTime);
+                } else if (mRepeat.equals("false")) {
+                    new AlarmScheduler().setAlarm(getApplicationContext(), selectedTimestamp, mCurrentReminderUri);
+                }
 
 //                    Toast.makeText(this, "Alarm time is " + selectedTimestamp,
 //                            Toast.LENGTH_LONG).show();
-                }
                 toast("Update Successful");
                 finish();
             }
+
         }
     }
 
