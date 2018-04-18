@@ -116,10 +116,7 @@ public class Profile extends AppCompatActivity {
         if (getEmail()!=null){
             email.setText(getEmail());
         }
-//        profileImageUrl = getPhotoUrl().toString();
-//
-//        user = new User(getName(),getEmail(),Uri.parse(profileImageUrl));
-//        mDatabase.child(getUid()).setValue(user);
+
     }
 
     private void saveUserInfo(){
@@ -130,8 +127,6 @@ public class Profile extends AppCompatActivity {
             displayName.setError("Field can't be empty");
             return;
         }
-
-
 
         if (mAuth.getCurrentUser()!=null && profileImageUrl!=null){
             UserProfileChangeRequest profile = new UserProfileChangeRequest.Builder()

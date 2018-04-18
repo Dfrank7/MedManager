@@ -165,18 +165,7 @@ public class MedCursorAdapter extends RecyclerView.Adapter<MedCursorAdapter.view
                         cursor.moveToPosition(position);
                         int id = cursor.getInt(hid);
                         Uri currentUri = ContentUris.withAppendedId(MedManagerContract.MedManagerEntry.CONTENT_URI,id);
-//                        Toast.makeText(view.getContext(), currentUri.toString(),Toast.LENGTH_SHORT).show();
-//                        Toast.makeText(view.getContext(), String.valueOf(id), Toast.LENGTH_SHORT).show();
-                        //medications.clear();
                         Intent intent = new Intent(view.getContext(), AddMedication.class)
-//                                .putExtra("id", id)
-//                                .putExtra("title", medications.get(position).getTitle())
-//                                .putExtra("description", medications.get(position).getDescription())
-//                                .putExtra("startDate", medications.get(position).getStartDate())
-//                                .putExtra("endDate", medications.get(position).getEndDate())
-//                                .putExtra("interval", medications.get(position).getInterval())
-//                                .putExtra("intervalNo", medications.get(position).getIntervalNo())
-//                                .putExtra("intervalType",medications.get(position).getIntervalType())
                                 .setData(currentUri);
                         view.getContext().startActivity(intent);
                     }

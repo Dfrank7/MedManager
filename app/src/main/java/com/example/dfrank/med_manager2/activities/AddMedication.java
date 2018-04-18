@@ -122,11 +122,8 @@ LoaderManager.LoaderCallbacks<Cursor>{
             invalidateOptionsMenu();
 
         }else {
-
-
             getSupportActionBar().setTitle("Edit Medication");
             getLoaderManager().restartLoader(0,null,this);
-
         }
 
         // Initialize default values
@@ -373,7 +370,6 @@ LoaderManager.LoaderCallbacks<Cursor>{
     }
 
     private void updateMedication(){
-
         mTitle = title.getText().toString().trim();
         mDescription = description.getText().toString().trim();
 
@@ -392,8 +388,6 @@ LoaderManager.LoaderCallbacks<Cursor>{
             contentValues.put(MedManagerContract.MedManagerEntry.COLUMN_INTERVAL_TYPE, mRepeatType);
             contentValues.put(MedManagerContract.MedManagerEntry.COLUMN_ACTIVE, mActive);
 
-
-
             int newId = getContentResolver().update(mCurrentReminderUri,
                     contentValues, null, null);
 
@@ -406,13 +400,9 @@ LoaderManager.LoaderCallbacks<Cursor>{
                 } else if (mRepeat.equals("false")) {
                     new AlarmScheduler().setAlarm(getApplicationContext(), selectedTimestamp, mCurrentReminderUri);
                 }
-
-//                    Toast.makeText(this, "Alarm time is " + selectedTimestamp,
-//                            Toast.LENGTH_LONG).show();
                 toast("Update Successful");
                 finish();
             }
-
         }
     }
     private void deleteMedication(){
@@ -498,25 +488,7 @@ LoaderManager.LoaderCallbacks<Cursor>{
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        String[] projection = {
-                MedManagerContract.MedManagerEntry._ID,
-                MedManagerContract.MedManagerEntry.COLUMN_TITLE,
-                MedManagerContract.MedManagerEntry.COLUMN_DESCRIPTION,
-                MedManagerContract.MedManagerEntry.COLUMN_START_DATE,
-                MedManagerContract.MedManagerEntry.COLUMN_END_DATE,
-                MedManagerContract.MedManagerEntry.COLUMN_INTERVAL,
-                MedManagerContract.MedManagerEntry.COLUMN_INTERVAL_NO,
-                MedManagerContract.MedManagerEntry.COLUMN_INTERVAL_TYPE,
-                MedManagerContract.MedManagerEntry.COLUMN_ACTIVE
-        };
 
-        // This loader will execute the ContentProvider's query method on a background thread
-//        return new CursorLoader(this,   // Parent activity context
-//                mCurrentReminderUri,         // Query the content URI for the current reminder
-//                projection,             // Columns to include in the resulting Cursor
-//                null,                   // No selection clause
-//                null,                   // No selection arguments
-//                null);
 
         return new AsyncTaskLoader<Cursor>(this) {
             Cursor mTaskData;

@@ -118,9 +118,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.viewHolder
                     if (position!=RecyclerView.NO_POSITION){
                         int hid = medications.get(position).getId();
                         Uri currentUri = ContentUris.withAppendedId(MedManagerContract.MedManagerEntry.CONTENT_URI,hid);
-//                        Toast.makeText(view.getContext(), currentUri.toString(),Toast.LENGTH_SHORT).show();
-//                        Toast.makeText(view.getContext(), String.valueOf(id), Toast.LENGTH_SHORT).show();
-                        //medications.clear();
                         Intent intent = new Intent(view.getContext(), AddMedication.class)
                                 .setData(currentUri);
                         view.getContext().startActivity(intent);

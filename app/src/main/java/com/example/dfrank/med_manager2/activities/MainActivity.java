@@ -127,24 +127,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         });
 
-
-
         medicationList = new ArrayList<>();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         medCursorAdapter = new MedCursorAdapter(this);
         recyclerView.setAdapter(medCursorAdapter);
-        //listView.setAdapter(medAdapter);
-
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                @Override
-//                public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-//                    Intent intent = new Intent(getBaseContext(), AddMedication.class);
-//                    Uri currentMedUri = ContentUris.withAppendedId(MedManagerContract.MedManagerEntry.CONTENT_URI,id);
-//                    intent.putExtra("id", id);
-//                    intent.setData(currentMedUri);
-//                    startActivity(intent);
-//                }
-//            });
 
         getLoaderManager().initLoader(MED_LOADER_ID, null, this);
 
@@ -295,9 +281,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             case R.id.refresh:
                 getLoaderManager().restartLoader(MED_LOADER_ID, null, this);
         }
-
         return true;
-
     }
 
     @Override
